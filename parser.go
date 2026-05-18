@@ -90,15 +90,32 @@ type seEnvelope struct {
 }
 
 type userItem struct {
-	UserID        int64  `json:"user_id"`
-	DisplayName   string `json:"display_name"`
-	Link          string `json:"link"`
-	Reputation    int64  `json:"reputation"`
-	ViewCount     int64  `json:"view_count"`
-	QuestionCount int64  `json:"question_count"`
-	AnswerCount   int64  `json:"answer_count"`
-	UpVoteCount   int64  `json:"up_vote_count"`
-	DownVoteCount int64  `json:"down_vote_count"`
+	UserID         int64  `json:"user_id"`
+	DisplayName    string `json:"display_name"`
+	Link           string `json:"link"`
+	Reputation     int64  `json:"reputation"`
+	ViewCount      int64  `json:"view_count"`
+	QuestionCount  int64  `json:"question_count"`
+	AnswerCount    int64  `json:"answer_count"`
+	UpVoteCount    int64  `json:"up_vote_count"`
+	DownVoteCount  int64  `json:"down_vote_count"`
+	// Profile metadata. These are part of the default filter shape on
+	// Stack Exchange and are populated when the user opts to expose them.
+	CreationDate    int64  `json:"creation_date"`
+	LastAccessDate  int64  `json:"last_access_date"`
+	LastModifiedDate int64 `json:"last_modified_date"`
+	Location        string `json:"location"`
+	WebsiteURL      string `json:"website_url"`
+	ProfileImage    string `json:"profile_image"`
+	AccountID       int64  `json:"account_id"`
+	UserType        string `json:"user_type"`
+	BadgeCounts     struct {
+		Bronze int `json:"bronze"`
+		Silver int `json:"silver"`
+		Gold   int `json:"gold"`
+	} `json:"badge_counts"`
+	IsEmployee  bool `json:"is_employee"`
+	AcceptRate  int  `json:"accept_rate"`
 }
 
 type userResp struct {
@@ -148,6 +165,41 @@ func (p *StackOverflowParser) FetchChannel(ctx context.Context, handle string) (
 		"up_vote_count":   it.UpVoteCount,
 		"down_vote_count": it.DownVoteCount,
 		"quota_remaining": resp.QuotaRemaining,
+		"badges": map[string]int{
+			"gold":   it.BadgeCounts.Gold,
+			"silver": it.BadgeCounts.Silver,
+			"bronze": it.BadgeCounts.Bronze,
+		},
+	}
+	if it.Location != "" {
+		raw["location"] = it.Location
+	}
+	if it.WebsiteURL != "" {
+		raw["website_url"] = it.WebsiteURL
+	}
+	if it.ProfileImage != "" {
+		raw["profile_image"] = it.ProfileImage
+	}
+	if it.UserType != "" {
+		raw["user_type"] = it.UserType
+	}
+	if it.AccountID != 0 {
+		raw["account_id"] = it.AccountID
+	}
+	if it.CreationDate != 0 {
+		raw["creation_date"] = it.CreationDate
+	}
+	if it.LastAccessDate != 0 {
+		raw["last_access_date"] = it.LastAccessDate
+	}
+	if it.LastModifiedDate != 0 {
+		raw["last_modified_date"] = it.LastModifiedDate
+	}
+	if it.AcceptRate != 0 {
+		raw["accept_rate"] = it.AcceptRate
+	}
+	if it.IsEmployee {
+		raw["is_employee"] = true
 	}
 	if resp.Backoff > 0 {
 		raw["backoff"] = resp.Backoff
