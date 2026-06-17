@@ -27,7 +27,7 @@ import (
 	"strings"
 	"time"
 
-	shared "github.com/suenot/w-popularity-shared"
+	shared "github.com/suenot/socials-auto"
 )
 
 const apiBase = "https://api.stackexchange.com/2.3"

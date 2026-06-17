@@ -1,4 +1,4 @@
-# w-popularity-parser-stackoverflow
+# stackoverflow-auto
 
 `stackoverflow` parser for [w_popularity](https://github.com/suenot/w-popularity), powered by the
 [Stack Exchange API v2.3](https://api.stackexchange.com/docs).
@@ -58,7 +58,7 @@ so callers can decide to wait before the next call.
 ## Usage
 
 ```go
-import parser "github.com/suenot/w-popularity-parser-stackoverflow"
+import parser "github.com/suenot/stackoverflow-auto"
 
 p := parser.New(parser.Config{AppKey: os.Getenv("STACK_APP_KEY")})
 
